@@ -30,7 +30,7 @@ module "elasticsearch" {
   ebs_volume_size            = local.es_allocated_disk_gb
   kibana_subdomain_name      = "kibana-es"
   encrypt_at_rest_enabled    = "true"
-  security_groups            = [module.elasticsearch_inbound[0].id]
+  security_groups            = [module.ec2_security_group[0].id]
   encrypt_at_rest_kms_key_id = module.kms_key.key_id
   advanced_options = {
     "rest.action.multi.allow_explicit_index" = "true"
@@ -38,18 +38,6 @@ module "elasticsearch" {
 
   context         = module.elasticsearch_label.context
   id_length_limit = 28 # Elasticsearch domains cannot be more than 28 characters
-}
-
-module "elasticsearch_inbound" {
-  source  = "cloudposse/security-group/aws"
-  version = "2.0.0"
-
-  count = local.es_enabled ? 1 : 0
-
-  vpc_id = module.vpc.vpc_id
-
-  context    = module.elasticsearch_label.context
-  attributes = ["inbound"]
 }
 
 resource "aws_elasticsearch_domain_policy" "default" {

@@ -43,6 +43,8 @@ module "rds" {
   database_user     = "cdrlink"
   database_password = random_password.rds_superuser[0].result
 
+  security_group_ids = [module.ec2_security_group[0].id]
+
   context    = module.this.context
   attributes = ["rds"]
 }
