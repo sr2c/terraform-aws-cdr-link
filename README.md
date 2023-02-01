@@ -28,7 +28,6 @@ Deploy the base infrastructure for a CDR Link deployment on AWS.
 | <a name="module_dynamic_subnet"></a> [dynamic\_subnet](#module\_dynamic\_subnet) | cloudposse/dynamic-subnets/aws | 2.1.0 |
 | <a name="module_ec2_security_group"></a> [ec2\_security\_group](#module\_ec2\_security\_group) | cloudposse/security-group/aws | 2.0.0 |
 | <a name="module_elasticsearch"></a> [elasticsearch](#module\_elasticsearch) | cloudposse/elasticsearch/aws | 0.35.1 |
-| <a name="module_elasticsearch_inbound"></a> [elasticsearch\_inbound](#module\_elasticsearch\_inbound) | cloudposse/security-group/aws | 2.0.0 |
 | <a name="module_elasticsearch_label"></a> [elasticsearch\_label](#module\_elasticsearch\_label) | cloudposse/label/null | 0.25.0 |
 | <a name="module_instance_role_profile"></a> [instance\_role\_profile](#module\_instance\_role\_profile) | sr2c/ec2-conf-log/aws | 0.0.2 |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | cloudposse/kms-key/aws | 0.9.0 |
