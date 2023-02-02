@@ -1,0 +1,51 @@
+name: terraform-aws-cdr-link
+copyrights:
+  - name: "SR2 Communications Limited"
+    url: "https://www.sr2.uk/"
+    year: "2021-2023"
+  - name: "Guardian Project and contributors"
+    url: "https://www.guardianproject.info/"
+    year: "2020-2023"
+license: "AGPL3"
+gitlab_repo: sr2c/terraform-aws-cdr-link
+related:
+- name: "terraform-null-label"
+  description: "Terraform module designed to generate consistent names and tags for resources. Use terraform-null-label to implement a strict naming convention."
+  url: "https://github.com/cloudposse/terraform-null-label"
+description: |-
+  *WARNING: Pre-release module. Do not rely on any of the inputs/outputs remaining stable here.*
+  
+  Terraform module to deploy the base infrastructure for CDR Link to AWS. The deployment will be optimised for security
+  by default, although some features may be disabled in order to reduce costs. The following groups of resources will be
+  created:
+  
+  * VPC (including public and private subnets in two availability zones)
+  * KMS key used for encryption of all storage
+  * PostgreSQL RDS instance
+  * Amazon OpenSearch Domain
+  * EC2 instance (including two EBS volumes)
+  
+  ![Architecture diagram](./docs/architecture.png)
+usage: |-
+  ```hcl
+  module "link" {
+    source = "sr2c/cdr-link/aws"
+    # version = "x.x.x"
+    namespace   = "eg"
+    name        = "link"
+    stage       = "dev"
+  }
+  ```
+include:
+- "docs/targets.md"
+- "docs/terraform.md"
+contributors:
+  - name: abel
+    gitlab: abelxluck
+    avatar: https://secure.gravatar.com/avatar/0f605397e0ead93a68e1be26dc26481a?s=192&d=identicon
+  - name: irl
+    gitlab: irlxyz
+    gitlab_id: 5895869
+  - name: redaranj
+    gitlab: redaranj
+    avatar: https://secure.gravatar.com/avatar/a4bb148b2c1a615f4b77b1e192f8e410?s=192&d=identicon
