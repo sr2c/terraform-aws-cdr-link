@@ -1,5 +1,7 @@
 locals {
-  ec2_instance_type = coalesce(var.ec2_instance_type, (module.this.stage == "prod") ? "t3.large" : "t3.medium")
+  ec2_instance_type             = coalesce(var.ec2_instance_type, (module.this.stage == "prod") ? "t3.large" : "t3.medium")
+  ebs_volume_disk_allocation_gb = tostring(coalesce(var.ebs_volume_disk_allocation_gb, 10))
+  ec2_disk_allocation_gb        = tostring(coalesce(var.ec2_disk_allocation_gb, (module.this.stage == "prod") ? 100 : 40))
 }
 
 resource "tls_private_key" "default" {
@@ -55,7 +57,7 @@ resource "aws_instance" "default" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = var.ebs_volume_disk_allocation_gb
+    volume_size = local.ec2_disk_allocation_gb
     encrypted   = true
     kms_key_id  = module.kms_key.key_arn
   }
@@ -110,7 +112,7 @@ resource "aws_ebs_volume" "data" {
   count = module.this.enabled ? 1 : 0
 
   availability_zone = local.availability_zones[0]
-  size              = var.ebs_volume_disk_allocation_gb
+  size              = local.ebs_volume_disk_allocation_gb
   encrypted         = true
   kms_key_id        = module.kms_key.key_arn
   tags              = module.this.tags
