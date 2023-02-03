@@ -38,10 +38,26 @@ module "instance_role_profile" {
 
   count = module.this.enabled ? 1 : 0
 
-  disable_configuration_bucket = true
   disable_logs_bucket          = true
 
   context = module.this.context
+}
+
+data "cloudinit_config" "this" {
+  gzip = true
+
+  part {
+    content_type = "text/x-shellscript"
+    content = <<EOT
+#!/bin/sh
+echo "dash dash/sh boolean false" | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+DEBIAN_FRONTEND=noninteractive apt install -y wget curl
+cd /opt
+wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+dpkg -i amazon-ssm-agent.deb
+EOT
+  }
 }
 
 resource "aws_instance" "default" {
@@ -70,6 +86,8 @@ resource "aws_instance" "default" {
   disable_api_termination = (module.this.stage == "prod")
 
   vpc_security_group_ids = [module.ec2_security_group[0].id]
+
+  user_data_base64 = data.cloudinit_config.this.rendered
 
   # this prevents changes to the ami from recreating the whole instance
   lifecycle {

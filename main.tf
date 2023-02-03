@@ -66,6 +66,26 @@ module "vpc_endpoints" {
 
   vpc_id = module.vpc.vpc_id
 
+  gateway_vpc_endpoints = {
+    "s3" = {
+      name = "s3"
+      policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+          {
+            Action = [
+              "s3:*",
+            ]
+            Effect    = "Allow"
+            Principal = "*"
+            Resource  = "*"
+          },
+        ]
+      })
+      route_table_ids = [module.vpc.vpc_main_route_table_id]
+    }
+  }
+
   interface_vpc_endpoints = {
     "ec2" = {
       name                = "ec2"
@@ -74,6 +94,20 @@ module "vpc_endpoints" {
       policy              = null
       private_dns_enabled = false
     },
+    "kms" = {
+      name                = "kms"
+      security_group_ids  = [module.ec2_security_group[0].id]
+      subnet_ids          = module.dynamic_subnet[0].private_subnet_ids
+      policy              = null
+      private_dns_enabled = false
+    }
+    "logs" = {
+      name                = "logs"
+      security_group_ids  = [module.ec2_security_group[0].id]
+      subnet_ids          = module.dynamic_subnet[0].private_subnet_ids
+      policy              = null
+      private_dns_enabled = false
+    }
     "ssm" = {
       name                = "ssm"
       security_group_ids  = [module.ec2_security_group[0].id]
@@ -145,6 +179,7 @@ data "aws_iam_policy_document" "kms" {
     content {
       sid    = "AllowArchiveAccountAttachmentOfPersistentResources"
       effect = "Allow"
+
       actions = [
         "kms:CreateGrant",
         "kms:ListGrants",
