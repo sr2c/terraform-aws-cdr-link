@@ -206,7 +206,7 @@ data "aws_iam_policy_document" "kms" {
 
 module "kms_key" {
   source  = "cloudposse/kms-key/aws"
-  version = "0.9.0"
+  version = "0.12.1"
 
   description             = "general purpose KMS key for this CDR Link deployment"
   deletion_window_in_days = 30
@@ -217,4 +217,11 @@ module "kms_key" {
 
   context    = module.this.context
   attributes = ["kms"]
+}
+
+resource "random_password" "zammad_monitoring_token" {
+  count = module.this.enabled ? 1 : 0
+
+  length  = 32
+  special = false
 }

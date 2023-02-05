@@ -2,16 +2,23 @@ name: terraform-aws-cdr-link
 copyrights:
   - name: "SR2 Communications Limited"
     url: "https://www.sr2.uk/"
-    year: "2021-2023"
+    year: "2021"
   - name: "Guardian Project and contributors"
     url: "https://www.guardianproject.info/"
-    year: "2020-2023"
+    year: "2020"
 license: "AGPL3"
 gitlab_repo: sr2c/terraform-aws-cdr-link
+references:
+  - name: "CDR Link"
+    description: "CDR Link is a secure, flexible human rights helpdesk featuring messaging plugins for all popular platforms, enabling responders help communities seeking assistance."
+    url: "https://digiresilience.org/solutions/link/"
 related:
-- name: "terraform-null-label"
-  description: "Terraform module designed to generate consistent names and tags for resources. Use terraform-null-label to implement a strict naming convention."
-  url: "https://github.com/cloudposse/terraform-null-label"
+  - name: "terraform-cloudflare-cdr-link"
+    description: "Terraform module to configure Cloudflare DNS and Cloudflare Access for CDR Link"
+    url: https://www.gitlab.com/sr2c/terraform-cloudflare-cdr-link/
+  - name: "terraform-null-label"
+    description: "Terraform module designed to generate consistent names and tags for resources. Use terraform-null-label to implement a strict naming convention."
+    url: "https://github.com/cloudposse/terraform-null-label"
 description: |-
   *WARNING: Pre-release module. Do not rely on any of the inputs/outputs remaining stable here.*
   
@@ -19,13 +26,45 @@ description: |-
   by default, although some features may be disabled in order to reduce costs. The following groups of resources will be
   created:
   
-  * VPC (including public and private subnets in two availability zones)
-  * KMS key used for encryption of all storage
+  * Virtual Private Cloud (VPC)
+  * Key Management Service (KMS) key
   * PostgreSQL RDS instance
   * Amazon OpenSearch Domain
-  * EC2 instance (including two EBS volumes)
+  * EC2 instance
+  
+  ### Architecture Overview
   
   ![Architecture diagram](./docs/architecture.png)
+  
+  ### Virtual Private Cloud (VPC)
+  
+  A VPC is created to have tight control over the subnets in use. The deployment uses a single AWS region, and a single
+  availability zone (a single subnet is provisioned in a second availability zone due to the requirement that RDS
+  instances are attached to two subnets in different availability zones, but nothing else interacts with that subnet).
+  
+  The deployment model intends that a zero-trust access solution is used to access the application (e.g. Cloudflare
+  Access) and so all resources containing the application and application data are provisioned into a private subnet.
+  No inbound access is permitted to the subnet. The instance must be managed via AWS Systems Manager (SSM).
+  
+  A gateway endpoint is provisioned for S3. Interface endpoints are provisioned for EC2, SSM, SSM Messages, CloudWatch,
+  and KMS. Outbound Internet access is facilitated by a NAT gateway.
+  
+  ### Key Management Service (KMS) key
+
+  A single KMS key is created for the encryption of all storage resources. When archiving the deployment, it is possible
+  to provide the account ID to the `archive_account_id` variable to permit that account access to the KMS key to decrypt
+  the storage.
+  
+  ### PostgreSQL RDS instance
+  
+  *TODO*
+  
+  ### Amazon OpenSearch Domain
+  
+  *TODO*
+  
+  ### EC2 instance
+
 usage: |-
   ```hcl
   module "link" {

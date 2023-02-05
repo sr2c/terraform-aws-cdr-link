@@ -4,7 +4,28 @@ locals {
   rds_allocated_disk_gb = coalesce(var.rds_allocated_disk_gb, (module.this.stage == "prod") ? 30 : 10)
 }
 
+resource "random_password" "metamigo" {
+  count = local.rds_enabled ? 1 : 0
+
+  length  = 48
+  special = false
+}
+
+resource "random_password" "metamigo_authenticator" {
+  count = local.rds_enabled ? 1 : 0
+
+  length  = 48
+  special = false
+}
+
 resource "random_password" "rds_superuser" {
+  count = local.rds_enabled ? 1 : 0
+
+  length  = 48
+  special = false
+}
+
+resource "random_password" "zammad" {
   count = local.rds_enabled ? 1 : 0
 
   length  = 48

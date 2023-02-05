@@ -190,7 +190,7 @@ variable "additional_tag_map" {
 
 variable "label_order" {
   type        = list(string)
-  default     = null
+  default     = ["namespace", "name", "tenant", "stage", "attributes"]
   description = <<-EOT
     The order in which the labels (ID elements) appear in the `id`.
     Defaults to ["namespace", "environment", "stage", "name", "attributes"].

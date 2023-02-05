@@ -38,7 +38,7 @@ module "instance_role_profile" {
 
   count = module.this.enabled ? 1 : 0
 
-  disable_logs_bucket          = true
+  disable_logs_bucket = true
 
   context = module.this.context
 }
@@ -48,7 +48,7 @@ data "cloudinit_config" "this" {
 
   part {
     content_type = "text/x-shellscript"
-    content = <<EOT
+    content      = <<EOT
 #!/bin/sh
 echo "dash dash/sh boolean false" | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
