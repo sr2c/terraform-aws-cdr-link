@@ -1,7 +1,7 @@
 locals {
   es_enabled           = module.this.enabled && var.es_enabled
   es_allocated_disk_gb = coalesce(var.es_allocated_disk_gb, (module.this.stage == "prod") ? 30 : 10)
-  es_instance_type     = coalesce(var.es_instance_type, (module.this.stage == "prod") ? "" : "t3.medium.elasticsearch")
+  es_instance_type     = coalesce(var.es_instance_type, (module.this.stage == "prod") ? "t3.medium.elasticsearch" : "t3.small.elasticsearch")
 }
 
 module "elasticsearch_label" {
