@@ -40,7 +40,7 @@ module "rds" {
 
   engine               = "postgres"
   instance_class       = local.rds_instance_type
-  engine_version       = "14.6"
+  engine_version       = "14.7"
   major_engine_version = "14"
   db_parameter_group   = "postgres14"
   allocated_storage    = local.rds_allocated_disk_gb
