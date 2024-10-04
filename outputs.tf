@@ -1,6 +1,6 @@
 
 output "es_hostname" {
-  value = module.elasticsearch[0].domain_hostname
+  value = module.elasticsearch[0].domain_endpoint
 }
 
 output "instance_id" {
