@@ -40,11 +40,15 @@ module "rds" {
 
   engine               = "postgres"
   instance_class       = local.rds_instance_type
-  engine_version       = "14.7"
-  major_engine_version = "14"
-  db_parameter_group   = "postgres14"
+  engine_version       = "16.3"
+  major_engine_version = "16"
+  db_parameter_group   = "postgres16"
   allocated_storage    = local.rds_allocated_disk_gb
   database_port        = 5432
+
+  db_parameter = [
+    { name  = "rds.force_ssl",   value = "0", apply_method = "immediate" }
+  ]
 
   kms_key_arn = module.kms_key.key_arn
 
