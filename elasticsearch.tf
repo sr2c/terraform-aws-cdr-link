@@ -14,7 +14,7 @@ module "elasticsearch_label" {
 
 module "elasticsearch" {
   source  = "cloudposse/elasticsearch/aws"
-  version = "0.35.1"
+  version = "0.38.0"
 
   count = local.es_enabled ? 1 : 0
 
