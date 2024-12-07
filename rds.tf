@@ -47,7 +47,7 @@ module "rds" {
   database_port        = 5432
 
   db_parameter = [
-    { name  = "rds.force_ssl",   value = "0", apply_method = "immediate" }
+    { name = "rds.force_ssl", value = "0", apply_method = "immediate" }
   ]
 
   kms_key_arn = module.kms_key.key_arn
